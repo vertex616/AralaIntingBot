@@ -4,6 +4,8 @@ import discord
 import asyncio
 import requests
 
+load_dotenv()
+
 DISCORD_TOKEN = os.getenv('DISCORD_TOKEN')
 RIOT_API_KEY = os.getenv('RIOT_API_KEY')
 GAME_NAME = 'ArsyQuan'
@@ -12,7 +14,6 @@ REGION = 'euw1'  # Change to your friend's region
 CHANNEL_ID = 723635368192245870  # Replace with your Discord channel ID
 SUMMONER_NAME = GAME_NAME  # Define SUMMONER_NAME to avoid NameError
 
-load_dotenv()
 intents = discord.Intents.default()
 client = discord.Client(intents=intents)
 
