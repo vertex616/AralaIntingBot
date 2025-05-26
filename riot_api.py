@@ -66,5 +66,7 @@ def get_match_stats(puuid, match_id):
         kill_participation = round(((k + a) / team_kills) * 100, 1)
     else:
         kill_participation = 0
+    
+    game_mode = match_data.get('info', {}).get('gameMode', 'Unknown')
 
-    return kda, score, damage, champ, totalMinionsKilled, victory, time_dead, kill_participation
+    return kda, score, damage, champ, totalMinionsKilled, victory, time_dead, kill_participation, game_mode
