@@ -25,10 +25,13 @@ class AralaBot(discord.Client):
             latest_match = get_latest_match_id(puuid)
             if latest_match and latest_match != self.last_match_id:
                 self.last_match_id = latest_match
-                kda, score, damage, champ, totalMinionsKilled, victory, time_dead, kill_participation = get_match_stats(puuid, latest_match)
+                kda, score, damage, champ, totalMinionsKilled, victory, time_dead, kill_participation, game_mode, role, lane = get_match_stats(puuid, latest_match)
                 await channel.send(
                     f"{self.summoner_name} just finished a new match!\n"
                     f"Result: {victory}\n"
+                    f"Game Mode: {game_mode}\n"
+                    f"Role: {role}\n"
+                    f"Lane: {lane}\n"
                     f"Champion: {champ}\n"
                     f"KDA: {kda}\n"
                     f"Level: {score}\n"
