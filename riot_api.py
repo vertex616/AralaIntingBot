@@ -68,11 +68,11 @@ def get_match_stats(puuid, match_id):
         kill_participation = 0
     
     game_mode = match_data.get('info', {}).get('gameMode', 'Unknown')
-    role = player_stats.get('teamPosition', player_stats.get('role', 'Unknown'))
+    #role = player_stats.get('teamPosition', player_stats.get('role', 'Unknown'))
     if not role or role.upper() == "NONE":
         role = "N/A"
     lane = player_stats.get('lane', 'Unknown')
 
 
 
-    return kda, score, damage, champ, totalMinionsKilled, victory, time_dead, kill_participation, game_mode, role, lane
+    return kda, score, damage, champ, totalMinionsKilled, victory, time_dead, kill_participation, game_mode, lane
