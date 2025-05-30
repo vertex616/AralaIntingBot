@@ -69,8 +69,8 @@ def get_match_stats(puuid, match_id):
     
     game_mode = match_data.get('info', {}).get('gameMode', 'Unknown')
     #role = player_stats.get('teamPosition', player_stats.get('role', 'Unknown'))
-    if not role or role.upper() == "NONE":
-        role = "N/A"
+    #if not role or role.upper() == "NONE":
+        #role = "N/A"
     lane = player_stats.get('lane', 'Unknown')
 
 
