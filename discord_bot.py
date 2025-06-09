@@ -8,7 +8,18 @@ class AralaBot(discord.Client):
         super().__init__(*args, **kwargs)
         self.channel_ids = channel_ids
         self.summoner_name = summoner_name
-        self.last_match_id = None
+        self.last_match_id = self.load_last_match_id()
+
+    def load_last_match_id(self):
+        try:
+            with open("last_match_id.txt", "r") as f:
+                return f.read().strip()
+        except FileNotFoundError:
+            return None
+
+    def save_last_match_id(self, match_id):
+        with open("last_match_id.txt", "w") as f:
+            f.write(match_id)
 
     async def on_ready(self):
         print(f'Logged in as {self.user}')
@@ -28,6 +39,7 @@ class AralaBot(discord.Client):
             latest_match = get_latest_match_id(puuid)
             if latest_match and latest_match != self.last_match_id:
                 self.last_match_id = latest_match
+                self.save_last_match_id(latest_match)  # Save to file
                 kda, score, damage, champ, totalMinionsKilled, victory, time_dead, kill_participation, game_mode, lane = get_match_stats(puuid, latest_match)
                 mention_user_id = os.getenv('MENTION_USER_ID')
                 mention = f"<@{mention_user_id}>" if mention_user_id else self.summoner_name
