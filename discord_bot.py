@@ -1,11 +1,12 @@
+import os
 import discord
 import asyncio
 from riot_api import get_puuid, get_latest_match_id, get_match_stats
 
 class AralaBot(discord.Client):
-    def __init__(self, channel_id, summoner_name, *args, **kwargs):
+    def __init__(self, channel_ids, summoner_name, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.channel_id = channel_id
+        self.channel_ids = channel_ids
         self.summoner_name = summoner_name
         self.last_match_id = None
 
@@ -15,22 +16,25 @@ class AralaBot(discord.Client):
 
     async def check_for_new_match(self):
         await self.wait_until_ready()
-        channel = self.get_channel(self.channel_id)
+        channels = [self.get_channel(cid) for cid in self.channel_ids]
         puuid = get_puuid()
         print("PUUID:", puuid)
         if not puuid:
-            await channel.send(f"Could not find PUUID for {self.summoner_name}. Check the summoner name and region.")
+            for channel in channels:
+                if channel:
+                    await channel.send(f"Could not find PUUID for {self.summoner_name}. Check the summoner name and region.")
             return
         while not self.is_closed():
             latest_match = get_latest_match_id(puuid)
             if latest_match and latest_match != self.last_match_id:
                 self.last_match_id = latest_match
                 kda, score, damage, champ, totalMinionsKilled, victory, time_dead, kill_participation, game_mode, lane = get_match_stats(puuid, latest_match)
-                await channel.send(
-                    f"{self.summoner_name} just finished a new match!\n"
+                mention_user_id = os.getenv('MENTION_USER_ID')
+                mention = f"<@{mention_user_id}>" if mention_user_id else self.summoner_name
+                message = (
+                    f"{mention} just finished a new match!\n"
                     f"Result: {victory}\n"
                     f"Game Mode: {game_mode}\n"
-                    #f"Role: {role}\n"
                     f"Lane: {lane}\n"
                     f"Champion: {champ}\n"
                     f"KDA: {kda}\n"
@@ -40,4 +44,7 @@ class AralaBot(discord.Client):
                     f"Total Time Spent Dead: {time_dead} seconds\n"
                     f"Kill Participation: {kill_participation}%"
                 )
+                for channel in channels:
+                    if channel:
+                        await channel.send(message)
             await asyncio.sleep(30)

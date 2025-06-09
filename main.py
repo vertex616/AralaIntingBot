@@ -7,11 +7,12 @@ load_dotenv()
 def main():
     print("RIOT_API_KEY:", os.getenv('RIOT_API_KEY'))
     DISCORD_TOKEN = os.getenv('DISCORD_TOKEN')
-    CHANNEL_ID = int(os.getenv('CHANNEL_ID', 723635368192245870))
+    # Read and parse multiple channel IDs
+    CHANNEL_IDS = [int(cid.strip()) for cid in os.getenv('CHANNEL_IDS', '723635368192245870').split(',')]
     SUMMONER_NAME = os.getenv('GAME_NAME', 'ArsyQuan')
 
     intents = __import__('discord').Intents.default()
-    bot = AralaBot(channel_id=CHANNEL_ID, summoner_name=SUMMONER_NAME, intents=intents)
+    bot = AralaBot(channel_ids=CHANNEL_IDS, summoner_name=SUMMONER_NAME, intents=intents)
     bot.run(DISCORD_TOKEN)
 
 if __name__ == "__main__":
